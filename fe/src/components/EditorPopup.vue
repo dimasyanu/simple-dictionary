@@ -5,14 +5,18 @@ const props = defineProps(['id', 'term', 'description'])
 const emit = defineEmits(['onSave', 'onCancel'])
 const state = ref({
   id: null,
-  key: '',
-  description: ''
+  term: '',
+  description: '',
+  action: 'update'
 })
 
 const save = function () {
-  if (state.value.key === '' || state.value.key == null || state.value.description === '' || state.value.description == null) return
+  if (state.value.term === '' || state.value.term == null || state.value.description === '' || state.value.description == null) return
+
+  state.value.action = 'update'
   if (state.value.id == null || state.value.id === '') {
     state.value.id = uuidv4()
+    state.value.action = 'create'
   }
   emit('onSave', state.value)
 }
@@ -21,7 +25,7 @@ const cancel = function() {
 }
 onMounted(() => {
   state.value.id = props.id
-  state.value.key = props.term
+  state.value.term = props.term
   state.value.description = props.description
 })
 </script>
@@ -32,7 +36,7 @@ onMounted(() => {
       <div class="min-h-[24rem] w-[50rem] bg-white rounded-xl p-8">
         <div>
           <input type="text" class="border-[1px] rounded-[24px] text-lg px-4 py-2 w-full text-center"
-            placeholder="Type to input key.." v-model="state.key" />
+            placeholder="Type to input term.." v-model="state.term" />
         </div>
         <div class="mt-4">
           <textarea name="description" id="description" class="border-[1px] w-full min-h-[240px] rounded-xl p-4"
